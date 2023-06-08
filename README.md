@@ -40,7 +40,9 @@ We tested those systems and it works without issues :
 
 #### Building
 
-Make sure the [GOPATH](https://github.com/golang/go/wiki/GOPATH) environment variable is correctly configured before running these commands.
+```
+go install github.com/mitchellh/gox@latest
+```
 
 Build all the binaries (adjust the domain_name and the encryption_key to your needs):
 
