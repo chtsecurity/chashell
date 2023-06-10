@@ -1,5 +1,47 @@
 # Chashell
 
+## Ports
+
+移除原版透過dep管理套件的方式，改以go 1.18 go mod方式管理套件。
+
+## 使用教學
+
+### 設定DNS
+
+假設root domain是chtrt.tw  
+DNS上要設定兩條record，首先為DNS Server(預計執行chaserv的主機)設定A Record:
+```
+# 設定chashell.chtrt.tw指向1.160.2.3
+chashell 300 IN A 1.160.2.3
+```
+接下來設定NS Record讓c.chtrt.tw由chaserv主機控制
+```
+c 300 IN NS chashell.chtrt.tw.
+```
+後續chashell會將執行結果透過c.chtrt.tw進行傳送
+
+### 編譯
+
+1. 安裝gox工具  
+    ```
+    go install github.com/mitchellh/gox@latest
+    ```
+2. 設定環境變數  
+    其中ENCRYPTION_KEY是用來做對稱加密的密碼，必須是32位元的hex string  
+    ```
+    $ export DOMAIN_NAME=c.chtrt.tw
+    # python3
+    $ export ENCRYPTION_KEY=$(python3 -c 'from secrets import token_hex; print(token_hex(32))')
+    # python2
+    $ export ENCRYPTION_KEY=$(python -c 'from os import urandom; print(urandom(32).encode("hex"))')
+    ```
+3. 編譯
+    ```
+    $ make build-all
+    ```
+
+下面是原版readme，留在底下提供參考
+
 ## Reverse Shell over DNS
 
 Chashell is a [Go](https://golang.org/) reverse shell that communicates over DNS. 
@@ -40,10 +82,8 @@ We tested those systems and it works without issues :
 
 #### Building
 
-```
-go install github.com/mitchellh/gox@latest
-```
 
+編譯binaries  
 Build all the binaries (adjust the domain_name and the encryption_key to your needs):
 
 
